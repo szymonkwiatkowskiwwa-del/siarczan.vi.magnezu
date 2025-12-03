@@ -1,279 +1,30 @@
+from flask import Flask, render_template_string
+
+app = Flask(__name__)
+
+html_code = """
 <!doctype html>
 <html lang="pl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MgSO₄ — siarczan(VI) magnezu (sól Epsom)</title>
-  <meta name="description" content="Minimalistyczna strona edukacyjna o siarczanie(VI) magnezu (MgSO₄): właściwości, hydraty, zastosowania, produkcja, bezpieczeństwo i ciekawostki." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #ffffff;
-      --text: #1a1a1a;
-      --muted: #5b5b5b;
-      --card: #f7f7f8;
-      --accent: #2f6feb;
-      --border: #e6e6ea;
-      --radius: 14px;
-      --shadow: 0 1px 4px rgba(0,0,0,0.06);
-      --maxw: 980px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f1115;
-        --text: #e7e7e7;
-        --muted: #a0a0a0;
-        --card: #161a22;
-        --accent: #7aa2ff;
-        --border: #242a35;
-        --shadow: none;
-      }
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-    .container { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
-    header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 0; border-bottom: 1px solid var(--border);
-    }
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .logo {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--accent), #7bdff2);
-      box-shadow: var(--shadow);
-    }
-    .brand h1 { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 0.2px; }
-    .hero {
-      padding: 28px 0; display: grid; gap: 10px;
-    }
-    .hero h2 { margin: 0; font-size: 30px; }
-    .hero p { margin: 0; color: var(--muted); max-width: 62ch; }
-    .grid { display: grid; gap: 16px; }
-    .grid-2 { grid-template-columns: 1fr; }
-    .grid-3 { grid-template-columns: 1fr; }
-    @media (min-width: 760px) {
-      .grid-2 { grid-template-columns: 1fr 1fr; }
-      .grid-3 { grid-template-columns: repeat(3, 1fr); }
-    }
-    .section-title {
-      margin: 26px 0 12px; font-size: 20px; font-weight: 700;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-    .card h3 { margin: 0 0 8px; font-size: 18px; }
-    .card p { margin: 0 0 8px; color: var(--muted); }
-    .data-list { display: grid; gap: 8px; }
-    .data-item { display: flex; justify-content: space-between; gap: 12px; }
-    .data-item strong { font-weight: 600; }
-    .note { font-size: 13px; color: var(--muted); }
-    .badge {
-      display: inline-block; background: rgba(127, 156, 255, 0.16);
-      color: var(--accent); border: 1px solid var(--border);
-      padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
-    }
-    blockquote {
-      margin: 0; padding: 14px 16px; border-left: 3px solid var(--accent);
-      background: var(--card); border-radius: 8px;
-    }
-    .table {
-      width: 100%; border-collapse: collapse; font-size: 14px;
-      overflow: hidden; border-radius: 10px; border: 1px solid var(--border);
-    }
-    .table th, .table td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; }
-    .table th { background: rgba(127, 156, 255, 0.08); font-weight: 600; }
-    .chip { display: inline-block; padding: 4px 8px; border: 1px solid var(--border); border-radius: 999px; font-size: 12px; }
-    .footer {
-      margin-top: 40px; padding: 18px 0; border-top: 1px solid var(--border);
-      color: var(--muted); font-size: 14px;
-    }
-    code.k {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas;
-      background: var(--card); padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border);
-    }
-  </style>
+  <title>MgSO₄ — siarczan(VI) magnezu</title>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
-        <h1>MgSO₄ — siarczan(VI) magnezu</h1>
-      </div>
-      <nav aria-label="Nawigacja pomocnicza">
-        <span class="chip">Edukacja</span>
-      </nav>
-    </header>
-
-    <section class="hero" aria-labelledby="intro-title">
-      <h2 id="intro-title">Minimalistyczny przewodnik o soli Epsom</h2>
-      <p>Najważniejsze fakty o siarczanie(VI) magnezu: właściwości, hydraty, zastosowania, bezpieczeństwo, pozyskiwanie i ciekawostki — zwięźle i czytelnie.</p>
-      <div class="grid grid-3" style="margin-top:8px">
-        <span class="badge">Wzór: MgSO₄ · 7H₂O</span>
-        <span class="badge">Typ: sól nieorganiczna</span>
-        <span class="badge">Zastosowania: ogród, laboratorium, przemysł</span>
-      </div>
-    </section>
-
-    <section aria-labelledby="dane-title">
-      <h3 class="section-title" id="dane-title">Dane podstawowe</h3>
-      <div class="card">
-        <h3>Identyfikacja i właściwości fizykochemiczne</h3>
-        <div class="data-list">
-          <div class="data-item"><strong>Nazwa</strong><span>siarczan(VI) magnezu</span></div>
-          <div class="data-item"><strong>Wzór bezwodny</strong><span>MgSO₄</span></div>
-          <div class="data-item"><strong>Wzór siedmiowodny</strong><span>MgSO₄·7H₂O (sól Epsom)</span></div>
-          <div class="data-item"><strong>Wygląd</strong><span>bezwodny: biały proszek; siedmiowodny: przezroczyste kryształki</span></div>
-          <div class="data-item"><strong>Smak/zapach</strong><span>gorzki, bezwonny</span></div>
-          <div class="data-item"><strong>Rozpuszczalność w wodzie</strong><span>wysoka (zwłaszcza forma siedmiowodna)</span></div>
-          <div class="data-item"><strong>Numer CAS</strong><span>7487-88-9</span></div>
-          <div class="data-item"><strong>Budowa jonowa</strong><span>Mg²⁺ + SO₄²⁻</span></div>
-        </div>
-        <p class="note">Uwaga: właściwości liczbowe (np. gęstość, rozpuszczalność dokładna) zależą od formy hydratów i temperatury — podawaj z konkretnych źródeł producenta lub literatury.</p>
-      </div>
-    </section>
-
-    <section aria-labelledby="hydraty-title">
-      <h3 class="section-title" id="hydraty-title">Hydraty siarczanu magnezu</h3>
-      <div class="card">
-        <h3>Najczęstsze formy i ich cechy</h3>
-        <table class="table" aria-label="Hydraty MgSO4">
-          <thead>
-            <tr>
-              <th>Forma</th>
-              <th>Wzór</th>
-              <th>Wygląd</th>
-              <th>Uwagi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Bezwodny</td>
-              <td>MgSO₄</td>
-              <td>Biały, drobnokrystaliczny proszek</td>
-              <td>Higroskopijny; wiąże wodę z otoczenia</td>
-            </tr>
-            <tr>
-              <td>Jednowodny</td>
-              <td>MgSO₄·H₂O (kizeryt)</td>
-              <td>Krystaliczny</td>
-              <td>Występuje naturalnie jako minerał</td>
-            </tr>
-            <tr>
-              <td>Siedmiowodny</td>
-              <td>MgSO₄·7H₂O (epsomit)</td>
-              <td>Przezroczyste kryształy</td>
-              <td>Sól Epsom — najpopularniejsza forma handlowa</td>
-            </tr>
-          </tbody>
-        </table>
-        <blockquote>Hydratacja to proces wbudowania cząsteczek wody w strukturę kryształu: MgSO₄ (s) + 7 H₂O (l) → MgSO₄·7H₂O (s).</blockquote>
-      </div>
-    </section>
-
-    <section aria-labelledby="zastosowania-title">
-      <h3 class="section-title" id="zastosowania-title">Zastosowania</h3>
-      <div class="grid grid-3">
-        <div class="card">
-          <h3>Rolnictwo i ogród</h3>
-          <ul>
-            <li><strong>Nawóz:</strong> źródło magnezu (dla chlorofilu) i siarki.</li>
-            <li><strong>Fertygacja:</strong> dobra rozpuszczalność ułatwia podawanie z wodą.</li>
-            <li><strong>Niedobory:</strong> poprawa zieloności liści i wzrostu przy niedoborze Mg.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Laboratorium i przemysł</h3>
-          <ul>
-            <li><strong>Suszenie organiczne:</strong> bezwodny MgSO₄ jako środek suszący.</li>
-            <li><strong>Syntezy:</strong> źródło jonów Mg²⁺ i siarczanowych.</li>
-            <li><strong>Galwanizacja / tekstylia:</strong> kontrola procesów i właściwości roztworów.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Dom i kosmetyka</h3>
-          <ul>
-            <li><strong>Kąpiele solne:</strong> pielęgnacja i relaks (informacje ogólne).</li>
-            <li><strong>Peelingi:</strong> delikatne ścieranie naskórka.</li>
-            <li><strong>Porządek:</strong> lekko ścierne zastosowania domowe.</li>
-          </ul>
-          <p class="note">W zastosowaniach zdrowotnych kieruj się profesjonalnymi zaleceniami; ta strona ma charakter edukacyjny.</p>
-        </div>
-      </div>
-    </section>
-
-    <section aria-labelledby="pozyskiwanie-title">
-      <h3 class="section-title" id="pozyskiwanie-title">Pozyskiwanie i przetwarzanie</h3>
-      <div class="grid grid-2">
-        <div class="card">
-          <h3>Pochodzenie naturalne</h3>
-          <p>Występuje jako minerały: kizeryt (MgSO₄·H₂O) i epsomit (MgSO₄·7H₂O), powstające m.in. w środowiskach parujących solanek i złożach ewaporatów.</p>
-          <p>Wydobycie i rozpuszczanie surowca, a następnie kontrolowana krystalizacja pozwala uzyskać pożądany hydrat.</p>
-        </div>
-        <div class="card">
-          <h3>Przemysłowa produkcja</h3>
-          <ul>
-            <li><strong>Rozpuszczanie:</strong> MgSO₄ w wodzie do roztworu.</li>
-            <li><strong>Krystalizacja:</strong> dobór temperatury i stężenia → selektywny hydrat (np. 7H₂O).</li>
-            <li><strong>Suszenie/odsączanie:</strong> uzyskanie czystych kryształów i pakowanie.</li>
-          </ul>
-          <p class="note">Parametry (T, stężenie, szybkość chłodzenia) decydują o tym, który hydrat powstanie.</p>
-        </div>
-      </div>
-    </section>
-
-    <section aria-labelledby="bezpieczenstwo-title">
-      <h3 class="section-title" id="bezpieczenstwo-title">Bezpieczeństwo i przechowywanie</h3>
-      <div class="grid grid-2">
-        <div class="card">
-          <h3>Bezpieczna praktyka</h3>
-          <ul>
-            <li><strong>Kontakt:</strong> unikaj kontaktu z oczami, po pracy umyj ręce.</li>
-            <li><strong>Przechowywanie:</strong> szczelnie zamknięte opakowanie, z dala od wilgoci i dzieci.</li>
-            <li><strong>Utylizacja:</strong> zgodnie z lokalnymi przepisami.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Charakter informacyjny</h3>
-          <blockquote>Treści na stronie mają charakter edukacyjny. Zastosowania zdrowotne wymagają profesjonalnych zaleceń.</blockquote>
-        </div>
-      </div>
-    </section>
-
-    <section aria-labelledby="ciekawostki-title">
-      <h3 class="section-title" id="ciekawostki-title">Ciekawostki</h3>
-      <div class="grid grid-3">
-        <div class="card">
-          <h3>Nazwa „Epsom”</h3>
-          <p>Pochodzi od angielskiego miasta Epsom, gdzie odkryto źródła bogate w sole magnezowe.</p>
-        </div>
-        <div class="card">
-          <h3>Proszek vs kryształ</h3>
-          <p>Bezwodny MgSO₄ wygląda jak biały proszek, a MgSO₄·7H₂O tworzy przezroczyste kryształy — różnicę daje woda w sieci krystalicznej.</p>
-        </div>
-        <div class="card">
-          <h3>Prosty eksperyment</h3>
-          <p>Rozpuść sól Epsom w ciepłej wodzie i pozostaw do powolnego odparowania — uzyskasz widoczne kryształy.</p>
-        </div>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <p>Edu — MgSO₄. Minimalistyczna strona informacyjna. Wartości liczbowe i normy zależą od źródeł producenta i literatury chemicznej.</p>
-    </footer>
-  </div>
+  <h1>MgSO₄ — siarczan(VI) magnezu</h1>
+  <p>Minimalistyczny przewodnik o soli Epsom.</p>
+  <ul>
+    <li>Wzór: MgSO₄·7H₂O</li>
+    <li>Zastosowania: medycyna, kosmetyka, rolnictwo</li>
+    <li>Ciekawostka: nazwa od miasta Epsom w Anglii</li>
+  </ul>
 </body>
 </html>
+"""
+
+@app.route("/")
+def index():
+    return render_template_string(html_code)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
